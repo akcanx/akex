@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AKCAN AKDAĞ — İçerik Yönetim Paneli</title>
+  <link rel="stylesheet" href="panel.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2226%22 font-size=%2224%22>⚡</text></svg>">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-badge">
+          AKCAN AKDAĞ <span class="brand-dot"></span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span class="cms-version">CMS v2.0</span>
+          <button class="mobile-sidebar-toggle" id="btnToggleSidebar" aria-label="Menüyü Aç/Kapat">
+            ☰
+          </button>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item active" id="navNew" data-view="form" data-mode="new">
+          <div class="nav-item-left">
+            <span class="nav-icon">✨</span>
+            <span>Yeni İçerik Ekle</span>
+          </div>
+        </a>
+
+        <div class="nav-section-title">KATEGORİLER</div>
+
+        <a class="nav-item" id="navYt" data-view="list" data-category="videos">
+          <div class="nav-item-left">
+            <span class="nav-icon">🎥</span>
+            <span>YouTube Videoları</span>
+          </div>
+          <span class="nav-counter" id="countNavYt">0</span>
+        </a>
+
+        <a class="nav-item" id="navMusic" data-view="list" data-category="music">
+          <div class="nav-item-left">
+            <span class="nav-icon">🎹</span>
+            <span>Şarkılar & Remixler</span>
+          </div>
+          <span class="nav-counter" id="countNavMusic">0</span>
+        </a>
+
+        <a class="nav-item" id="navPod" data-view="list" data-category="podcasts">
+          <div class="nav-item-left">
+            <span class="nav-icon">🎙️</span>
+            <span>Podcast Bölümleri</span>
+          </div>
+          <span class="nav-counter" id="countNavPod">0</span>
+        </a>
+
+        <a class="nav-item" id="navBlog" data-view="list" data-category="articles">
+          <div class="nav-item-left">
+            <span class="nav-icon">✍️</span>
+            <span>Blog Yazıları</span>
+          </div>
+          <span class="nav-counter" id="countNavBlog">0</span>
+        </a>
+
+        <!-- Dinamik Özel Kategoriler -->
+        <div id="customNavCategories" style="display: flex; flex-direction: column; gap: 0.3rem;"></div>
+
+        <!-- Yeni Kategori Ekle Butonu -->
+        <button type="button" class="btn-add-cat-sidebar" id="btnOpenNewCategoryModal" title="Sitenize yeni bir kategori ekleyin">
+          <span class="add-cat-plus">＋</span>
+          <span>Yeni Kategori Ekle</span>
+        </button>
+
+        <div class="nav-section-title">SAYFALAR & AYARLAR</div>
+
+        <a class="nav-item" id="navAbout" data-view="about">
+          <div class="nav-item-left">
+            <span class="nav-icon">👤</span>
+            <span>Hakkında & Profil</span>
+          </div>
+        </a>
+
+        <a class="nav-item" id="navSettings" data-view="settings">
+          <div class="nav-item-left">
+            <span class="nav-icon">⚙️</span>
+            <span>Site & Marka Ayarları</span>
+          </div>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button type="button" class="btn btn-secondary btn-sm" id="btnSidebarMobilePreview" style="justify-content: center; width: 100%;">
+          <span>📱 Mobil Önizleme</span>
+        </button>
+        <a href="index.html" target="_blank" class="btn btn-secondary btn-sm" style="justify-content: center; width: 100%;">
+          <span>🌐 Siteyi Önizle</span>
+        </a>
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-align: center;">
+          Otomatik Yedekleme Aktif
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <main class="main-wrapper">
+      <!-- Top Action Bar -->
+      <header class="top-bar">
+        <h1 class="top-title" id="pageTitle">Yeni İçerik Ekle</h1>
+        <div class="top-actions">
+          <button type="button" class="btn btn-secondary" id="btnTopMobilePreview" title="Mobil görünümü canlı test edin">
+            <span>📱 Mobil Önizleme</span>
+          </button>
+          <button class="btn btn-secondary" id="btnQuickBuild" title="Mevcut verilerle sayfaları yeniden derler">
+            <span>⚡ Şimdi Derle</span>
+          </button>
+          <button class="btn btn-primary" id="btnTopSave">
+            <span>💾 Kaydet & Yayınla</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Views Area -->
+      <div class="view-container">
+        
+        <!-- ================================================================
+             1. FORM GÖRÜNÜMÜ (YENİ EKLE / DÜZENLE)
+             ================================================================ -->
+        <section id="viewForm">
+          <!-- Kategori Seçici Butonlar -->
+          <div class="cat-picker-grid" id="catPicker">
+            <button class="cat-picker-btn active" data-cat="videos">
+              <span class="cat-picker-icon">🎥</span>
+              <div class="cat-picker-text">
+                <h4>YouTube Videosu</h4>
+                <p>Belgesel & Felsefe</p>
+              </div>
+            </button>
+
+            <button class="cat-picker-btn" data-cat="music">
+              <span class="cat-picker-icon">🎹</span>
+              <div class="cat-picker-text">
+                <h4>Şarkılar & Remixler</h4>
+                <p>Synthwave & Lo-Fi</p>
+              </div>
+            </button>
+
+            <button class="cat-picker-btn" data-cat="podcasts">
+              <span class="cat-picker-icon">🎙️</span>
+              <div class="cat-picker-text">
+                <h4>Podcast Bölümü</h4>
+                <p>Derin Odak Serisi</p>
+              </div>
+            </button>
+
+            <button class="cat-picker-btn" data-cat="articles">
+              <span class="cat-picker-icon">✍️</span>
+              <div class="cat-picker-text">
+                <h4>Blog Yazısı</h4>
+                <p>Haftalık Deneme</p>
+              </div>
+            </button>
+          </div>
+
+          <!-- Form Kartı -->
+          <form id="contentForm" class="form-card" onsubmit="return false;">
+            <input type="hidden" id="editId" value="">
+            <input type="hidden" id="currentCategory" value="videos">
+
+            <div class="form-grid">
+              <!-- Başlık -->
+              <div class="form-group col-span-2">
+                <label class="form-label" for="inpTitle">
+                  <span>İçerik Başlığı *</span>
+                  <small>Göz alıcı ve aramalara uygun bir başlık</small>
+                </label>
+                <input type="text" id="inpTitle" class="form-input" placeholder="Örn: Yapay Zeka Gerçekten Düşünebilir mi?" required>
+              </div>
+
+              <!-- Slug & URL -->
+              <div class="form-group">
+                <label class="form-label" for="inpSlug">
+                  <span>Sayfa Adresi (Slug) *</span>
+                  <small>Türkçe karaktersiz, küçük harfli</small>
+                </label>
+                <input type="text" id="inpSlug" class="form-input" placeholder="orn: yapay-zeka-dusunebilir-mi" required>
+              </div>
+
+              <!-- Yayın Tarihi -->
+              <div class="form-group">
+                <label class="form-label" for="inpDate">
+                  <span>Yayın Tarihi *</span>
+                  <small>Gün Ay Yıl formatında</small>
+                </label>
+                <input type="text" id="inpDate" class="form-input" placeholder="Örn: 2 Ekim 2026" required>
+              </div>
+
+              <!-- Etiketler -->
+              <div class="form-group col-span-2">
+                <label class="form-label" for="inpTags">
+                  <span>Etiketler (Virgülle Ayırın)</span>
+                  <small>SEO ve arama filtreleri için</small>
+                </label>
+                <input type="text" id="inpTags" class="form-input" placeholder="Örn: Yapay Zeka, Felsefe, Bilinç, Teknoloji">
+              </div>
+
+              <!-- Kapak Resmi Yükleyici & Önizleme -->
+              <div class="form-group col-span-2">
+                <label class="form-label">
+                  <span>Kapak Görseli</span>
+                  <small>Bilgisayarınızdan yükleyin veya URL yapıştırın</small>
+                </label>
+                <div class="image-upload-box">
+                  <div class="image-preview" id="coverPreview">
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Önizleme</span>
+                  </div>
+                  <div class="image-dropzone" id="dropZoneCover">
+                    <p>📂 <strong>Görsel Yüklemek İçin Tıklayın</strong> veya Sürükleyip Bırakın</p>
+                    <small>WebP veya JPG önerilir. Otomatik olarak images/ klasörüne kaydedilir.</small>
+                    <input type="file" id="fileCoverInput" accept="image/*" style="display: none;">
+                  </div>
+                </div>
+                <input type="text" id="inpCover" class="form-input" style="margin-top: 0.6rem; font-family: var(--font-mono); font-size: 0.82rem;" placeholder="Görsel dosya yolu (Örn: images/covers/video/resim.webp)">
+              </div>
+
+              <!-- ================= DİNAMİK ALANLAR ================= -->
+              
+              <!-- 1. YOUTUBE ALANLARI -->
+              <div class="cat-field col-span-2" id="fieldYoutube" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem;">
+                <div class="form-group">
+                  <label class="form-label" for="inpYtDuration">Video Süresi</label>
+                  <input type="text" id="inpYtDuration" class="form-input" placeholder="Örn: 18:42">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpYtEmbed">
+                    <span>YouTube Embed URL / Link / Iframe *</span>
+                    <small>Link veya iframe kodu yapıştırın</small>
+                  </label>
+                  <input type="text" id="inpYtEmbed" class="form-input" placeholder="YouTube linki, watch?v= veya iframe kodunu yapıştırın">
+                </div>
+                <!-- Canlı Video Önizleme Kartı -->
+                <div class="col-span-2" style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                    <span style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--accent-amber);" id="ytPreviewBadge">📺 YOUTUBE CANLI ÖNİZLEME</span>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnFetchYtThumb" style="display:none; font-size:0.75rem;">🖼️ Kapak Resmini YouTube'dan Al</button>
+                  </div>
+                  <div id="ytLivePlayerWrap" style="width: 100%; aspect-ratio: 16/9; max-height: 320px; background: #000; border-radius: var(--radius-sm); overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.9rem;">
+                    <span>Video linkini yukarıya yapıştırdığınızda burada canlı oynatılacaktır.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. ŞARKILAR & REMİXLER ALANLARI -->
+              <div class="cat-field col-span-2" id="fieldMusic" style="display: none; grid-template-columns: 1fr 1fr; gap: 1.4rem;">
+                <div class="form-group">
+                  <label class="form-label" for="inpMusicType">Müzik Türü</label>
+                  <select id="inpMusicType" class="form-select">
+                    <option value="Remix">Remix</option>
+                    <option value="Orijinal Parça">Orijinal Parça</option>
+                    <option value="Akustik">Akustik</option>
+                    <option value="Soundtrack">Soundtrack</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpMusicDuration">Süre</label>
+                  <input type="text" id="inpMusicDuration" class="form-input" placeholder="Örn: 03:45">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpMusicYt">
+                    <span>YouTube Video / Iframe Linki *</span>
+                    <small>Link veya iframe kodu</small>
+                  </label>
+                  <input type="text" id="inpMusicYt" class="form-input" placeholder="YouTube linki veya iframe kodu">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpMusicYtMusic">YouTube Music Dinleme Linki</label>
+                  <input type="text" id="inpMusicYtMusic" class="form-input" placeholder="https://music.youtube.com/watch?v=...">
+                </div>
+                <!-- Canlı Müzik Video Önizleme Kartı -->
+                <div class="col-span-2" style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                    <span style="font-size: 0.8rem; font-family: var(--font-mono); color: #e879f9;" id="musicYtPreviewBadge">🎵 MÜZİK VİDEOSU CANLI ÖNİZLEME</span>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnFetchMusicThumb" style="display:none; font-size:0.75rem;">🖼️ Kapak Resmini YouTube'dan Al</button>
+                  </div>
+                  <div id="musicYtLivePlayerWrap" style="width: 100%; aspect-ratio: 16/9; max-height: 280px; background: #000; border-radius: var(--radius-sm); overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.9rem;">
+                    <span>YouTube linkini yapıştırdığınızda video burada canlı oynatılacaktır.</span>
+                  </div>
+                </div>
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpMusicCredits">Künye & Bilgi</label>
+                  <input type="text" id="inpMusicCredits" class="form-input" placeholder="Prodüksiyon & Düzenleme: AKCAN AKDAĞ · YouTube Müzik Kanalı Özel Yayın">
+                </div>
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpMusicLyrics">Şarkı Sözleri & Liner Notes (Her satırı yeni satıra yazın)</label>
+                  <textarea id="inpMusicLyrics" class="form-textarea" rows="4" placeholder="Sessiz caddeler, neon ışıkların parıltısı&#10;Gecenin ritmiyle kaybolan düşünceler..."></textarea>
+                </div>
+              </div>
+
+              <!-- 3. PODCAST ALANLARI -->
+              <div class="cat-field col-span-2" id="fieldPodcast" style="display: none; grid-template-columns: 1fr 1fr; gap: 1.4rem;">
+                <div class="form-group">
+                  <label class="form-label" for="inpPodEpisode">Bölüm Numarası *</label>
+                  <input type="number" id="inpPodEpisode" class="form-input" placeholder="Örn: 49">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpPodDuration">Bölüm Süresi</label>
+                  <input type="text" id="inpPodDuration" class="form-input" placeholder="Örn: 34 dk">
+                </div>
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpPodAudio">Ses Dosyası (MP3 URL) *</label>
+                  <input type="text" id="inpPodAudio" class="form-input" placeholder="https://podcast-servisi.com/ses.mp3">
+                </div>
+                <!-- Canlı Ses Önizleme -->
+                <div class="col-span-2" id="podAudioPreviewWrap" style="display: none; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem;">
+                  <span style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">🎙️ SES DOSYASI CANLI ÖNİZLEME</span>
+                  <audio id="podAudioPlayer" controls style="width: 100%;"></audio>
+                </div>
+              </div>
+
+              <!-- 4. BLOG ALANLARI -->
+              <div class="cat-field col-span-2" id="fieldBlog" style="display: none; grid-template-columns: 1fr 1fr; gap: 1.4rem;">
+                <div class="form-group">
+                  <label class="form-label" for="inpBlogWeek">Hafta No</label>
+                  <input type="number" id="inpBlogWeek" class="form-input" placeholder="Örn: 53">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpBlogReadTime">Okuma Süresi</label>
+                  <input type="text" id="inpBlogReadTime" class="form-input" placeholder="Örn: 7 dk okuma">
+                </div>
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpBlogSummary">Kısa Özet (Manşet Kartı ve Arama Motorları İçin) *</label>
+                  <textarea id="inpBlogSummary" class="form-textarea" rows="2" placeholder="Yazının ana fikrini özetleyen 1-2 cümlelik editoryal giriş..."></textarea>
+                </div>
+                <div class="form-group col-span-2">
+                  <label class="form-label">
+                    <span>Yazı İçeriği (HTML / Zengin Metin) *</span>
+                    <small>Paragraflar, ara başlıklar ve alıntılar</small>
+                  </label>
+                  <div style="display: flex; gap: 0.4rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="insertTag('lead')">Giriş Paragrafı (Lead)</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="insertTag('h3')">Ara Başlık (H3)</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="insertTag('quote')">Alıntı (Quote)</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="insertTag('figure')">Görsel / Şekil Ekle</button>
+                  </div>
+                  <textarea id="inpBlogContent" class="form-textarea" rows="10" placeholder="<p class='lead'>İlk vurgulu paragraf...</p>&#10;<p>Gelişme metni...</p>"></textarea>
+                </div>
+              </div>
+
+              <!-- Ortak Açıklama / Özet Alanı (Video, Podcast, Müzik) -->
+              <div class="form-group col-span-2" id="fieldCommonDesc">
+                <label class="form-label" for="inpDescription">Açıklama / Editoryal Özet *</label>
+                <textarea id="inpDescription" class="form-textarea" rows="3" placeholder="İçeriğin genel konusunu ve mesajını özetleyen açıklama..."></textarea>
+              </div>
+
+              <!-- Transkript Alanı (Video & Podcast İçin) -->
+              <div class="form-group col-span-2" id="fieldTranscriptArea">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                  <label class="form-label">
+                    <span>Transkript ve Konuşma Metinleri (SEO & GEO)</span>
+                    <small>Yapay zeka arama motorları için tam döküm</small>
+                  </label>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnAddTranscriptItem">
+                    + Yeni Bölüm Ekle
+                  </button>
+                </div>
+                <div class="repeater-box" id="transcriptContainer">
+                  <!-- Dinamik transkript bölümleri -->
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+              <button type="button" class="btn btn-secondary" id="btnCancelEdit">İptal</button>
+              <button type="submit" class="btn btn-primary" id="btnSaveContent">
+                💾 Kaydet & Siteyi Güncelle
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- ================================================================
+             2. LİSTE GÖRÜNÜMÜ (MEVCUT İÇERİKLERİ YÖNETME)
+             ================================================================ -->
+        <section id="viewList" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem;">
+            <input type="search" id="inpListSearch" class="form-input" style="max-width: 400px;" placeholder="Başlık veya etikete göre ara...">
+            <button class="btn btn-primary" id="btnListAddNew">+ Yeni İçerik Ekle</button>
+          </div>
+
+          <div class="content-grid" id="listGrid">
+            <!-- Dinamik kartlar -->
+          </div>
+        </section>
+
+        <!-- ================================================================
+             3. HAKKINDA & PROFİL DÜZENLEYİCİ
+             ================================================================ -->
+        <section id="viewAbout" style="display: none;">
+          <form id="aboutForm" class="form-card" onsubmit="return false;">
+            
+            <!-- Bölüm 1: Profil Kartı (Avatar, İsim, Unvan, Slogan) -->
+            <div style="border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.4rem;">1. Profil & Giriş Kartı</h3>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.2rem;">
+                Hakkında sayfasının ve anasayfa hakkımda sekmesinin en üstünde görünen profil bilgileri.
+              </p>
+
+              <!-- Profil Görseli / Avatar -->
+              <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label class="form-label">
+                  <span>Profil Fotoğrafı / Avatar</span>
+                  <small>Görsel yükleyin veya dosya yolunu girin</small>
+                </label>
+                <div class="image-upload-box">
+                  <div class="image-preview" id="avatarPreview" style="border-radius: 50%; width: 100px; height: 100px;">
+                    <img src="images/author/akcan-akdag.svg" alt="Avatar Önizleme" id="avatarPreviewImg" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                  </div>
+                  <div class="image-dropzone" id="dropZoneAvatar">
+                    <p>📸 Yeni Profil Fotoğrafı Sürükleyin veya <strong>Seçin</strong></p>
+                    <small>PNG, JPG, SVG veya WEBP formatında</small>
+                    <input type="file" id="fileAvatarInput" accept="image/*" style="display: none;">
+                  </div>
+                </div>
+                <input type="text" id="inpAboutAvatar" class="form-input" style="margin-top: 0.6rem;" placeholder="Örn: images/author/akcan-akdag.svg veya https://..." value="images/author/akcan-akdag.svg">
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="inpAboutName">
+                    <span>Yazar / Anlatıcı Adı *</span>
+                  </label>
+                  <input type="text" id="inpAboutName" class="form-input" value="AKCAN AKDAĞ" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpAboutBadge">
+                    <span>Unvan / Rozet Metni</span>
+                    <small>İsmin üzerinde büyük harflerle görünen etiket</small>
+                  </label>
+                  <input type="text" id="inpAboutBadge" class="form-input" value="YAZAR · ANLATICI · DİJİTAL DÜŞÜNÜR" required>
+                </div>
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpAboutLead">
+                    <span>Manifesto & Slogan (Vurgulu Giriş Cümlesi)</span>
+                    <small>Profil kartında tırnak içinde yer alan temel düşünceniz</small>
+                  </label>
+                  <textarea id="inpAboutLead" class="form-textarea" rows="2">"Sanat, teknoloji ve felsefenin kesişim noktasında insan zihnini, evreni ve geleceği anlamaya çalışan hikâyeler anlatıyorum."</textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bölüm 2: Hikâye & "Ben Kimim?" -->
+            <div style="border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.4rem;">2. Hikâye & Biyografi</h3>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.2rem;">
+                Kendinizi, felsefenizi ve amacınızı anlatan detaylı tanıtım metni.
+              </p>
+              <div class="form-grid">
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpAboutWhoTitle">
+                    <span>Bölüm Başlığı</span>
+                  </label>
+                  <input type="text" id="inpAboutWhoTitle" class="form-input" value="Ben Kimim?" required>
+                </div>
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpAboutWhoText">
+                    <span>Biyografi & Hikâye Metni (Paragraflar)</span>
+                    <small>Paragraflar arasında bir boş satır bırakabilirsiniz</small>
+                  </label>
+                  <textarea id="inpAboutWhoText" class="form-textarea" rows="6" placeholder="Hikâyenizi buraya yazın..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bölüm 3: "Neler Üretiyorum?" Sütunları -->
+            <div style="border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <div>
+                  <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.2rem;">3. Neler Üretiyorum? (Üretim Alanları)</h3>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                    Ürettiğiniz içerik türlerini tanıtan kart blokları.
+                  </p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="btnAddPillar">+ Yeni Alan Ekle</button>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" for="inpAboutPillarsTitle">
+                  <span>Bölüm Başlığı</span>
+                </label>
+                <input type="text" id="inpAboutPillarsTitle" class="form-input" value="Neler Üretiyorum?">
+              </div>
+
+              <div id="pillarsContainer" class="repeater-box">
+                <!-- Dinamik Üretim Alanı Kartları -->
+              </div>
+            </div>
+
+            <!-- Bölüm 4: Üretim İlkeleri & Felsefe -->
+            <div style="border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <div>
+                  <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.2rem;">4. Üretim İlkeleri & Felsefe</h3>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                    İçerik üretirken benimsediğiniz değerler ve manifestonuz.
+                  </p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="btnAddPrinciple">+ Yeni İlke Ekle</button>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" for="inpAboutPrinciplesTitle">
+                  <span>Bölüm Başlığı</span>
+                </label>
+                <input type="text" id="inpAboutPrinciplesTitle" class="form-input" value="Üretim İlkelerim">
+              </div>
+
+              <div id="principlesContainer" class="repeater-box">
+                <!-- Dinamik İlkeler Listesi -->
+              </div>
+            </div>
+
+            <!-- Bölüm 5: İletişim & İş Birlikleri -->
+            <div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.4rem;">5. İletişim & İş Birlikleri</h3>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.2rem;">
+                Hakkında sayfasının sonundaki iş birliği daveti ve iletişim kutusu.
+              </p>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="inpAboutContactTitle">
+                    <span>Kutu Başlığı</span>
+                  </label>
+                  <input type="text" id="inpAboutContactTitle" class="form-input" value="İletişim & İş Birlikleri">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpAboutContactEmail">
+                    <span>İletişim E-posta Adresi</span>
+                    <small>Buton olarak gösterilir (opsiyonel)</small>
+                  </label>
+                  <input type="email" id="inpAboutContactEmail" class="form-input" placeholder="ornek@alanadi.com">
+                </div>
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpAboutContactText">
+                    <span>İletişim Mesajı & Açıklama</span>
+                  </label>
+                  <textarea id="inpAboutContactText" class="form-textarea" rows="2">Projeler, konuşma davetleri, iş birlikleri veya sadece fikir alışverişinde bulunmak için sosyal medya hesaplarımdan ulaşabilirsiniz.</textarea>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 0.8rem;">
+              <button type="submit" class="btn btn-primary" id="btnSaveAbout">
+                💾 Hakkında Bilgilerini Kaydet & Yayınla
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- ================================================================
+             4. GENEL SİTE & MARKA AYARLARI
+             ================================================================ -->
+        <section id="viewSettings" style="display: none;">
+          <form id="settingsForm" class="form-card" onsubmit="return false;">
+            
+            <!-- Bölüm 1: Marka ve Başlık -->
+            <div style="border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.4rem;">1. Marka & Başlık</h3>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.2rem;">
+                Web sitesinin sol üst köşesinde ve mobil menüde yer alan ana marka/yazar adı.
+              </p>
+              <div class="form-grid">
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpSettingBrandName">
+                    <span>Üst Bant Marka Yazısı</span>
+                    <small>Sitenin sol üstündeki logo ve isim metni</small>
+                  </label>
+                  <input type="text" id="inpSettingBrandName" class="form-input" value="AKCAN AKDAĞ" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bölüm 2: Kategori & Menü Sekme İsimleri -->
+            <div style="border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.4rem;">2. Menü & Kategori İsimleri</h3>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.2rem;">
+                Üst navigasyon çubuğunda ve anasayfa akış filtrelerinde görünen etiketleri özelleştirin.
+              </p>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="inpSettingNavHome">
+                    <span>Anasayfa Sekmesi</span>
+                  </label>
+                  <input type="text" id="inpSettingNavHome" class="form-input" value="Anasayfa" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpSettingNavYt">
+                    <span>YouTube Sekmesi</span>
+                  </label>
+                  <input type="text" id="inpSettingNavYt" class="form-input" value="Youtube" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpSettingNavPod">
+                    <span>Podcast Sekmesi</span>
+                  </label>
+                  <input type="text" id="inpSettingNavPod" class="form-input" value="Podcast" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpSettingNavBlog">
+                    <span>Blog Sekmesi</span>
+                  </label>
+                  <input type="text" id="inpSettingNavBlog" class="form-input" value="Blog" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpSettingNavMusic">
+                    <span>Şarkılar & Remixler Sekmesi</span>
+                  </label>
+                  <input type="text" id="inpSettingNavMusic" class="form-input" value="Şarkılar & Remixler" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="inpSettingNavAbout">
+                    <span>Hakkında Sekmesi</span>
+                  </label>
+                  <input type="text" id="inpSettingNavAbout" class="form-input" value="Hakkında" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bölüm 3: Alt Bant (Footer) Metinleri -->
+            <div style="border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.4rem;">3. Alt Bant (Footer) Metinleri</h3>
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.2rem;">
+                Tüm sayfaların en altındaki telif, slogan ve marka yazısı.
+              </p>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="inpSettingFooterBrand">
+                    <span>Footer Marka İsmi</span>
+                  </label>
+                  <input type="text" id="inpSettingFooterBrand" class="form-input" value="AKCAN AKDAĞ" required>
+                </div>
+                <div class="form-group col-span-2">
+                  <label class="form-label" for="inpSettingFooterCopy">
+                    <span>Telif & Slogan Metni</span>
+                    <small>Alt bantta sol altta görünen açıklama cümlesi</small>
+                  </label>
+                  <input type="text" id="inpSettingFooterCopy" class="form-input" value="© 2026 AKCAN AKDAĞ · Kültür, teknoloji ve zihin haritaları." required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bölüm 4: Sosyal Medya Bağlantıları -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                <div>
+                  <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin-bottom: 0.2rem;">4. Sosyal Medya Bağlantıları</h3>
+                  <p style="color: var(--text-secondary); font-size: 0.85rem;">
+                    Alt bantta ve sayfalarda yer alan sosyal medya hesaplarınız.
+                  </p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" id="btnAddSocialLink">+ Yeni Hesap Ekle</button>
+              </div>
+
+              <div id="socialLinksContainer" class="repeater-box">
+                <!-- Dinamik sosyal medya satırları -->
+              </div>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 0.8rem;">
+              <button type="submit" class="btn btn-primary" id="btnSaveSettings">
+                💾 Site Ayarlarını Kaydet & Yayınla
+              </button>
+            </div>
+          </form>
+        </section>
+
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================================================================
+       YENİ / DÜZENLE KATEGORİ MODALI
+       ====================================================================== -->
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal-dialog category-dialog">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.2rem;">
+        <h3 id="categoryModalTitle" style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--text-main);">
+          ✨ Yeni Kategori Ekle
+        </h3>
+        <button type="button" class="btn-close-modal" id="btnCloseCatModal" aria-label="Kapat" style="font-size: 1.2rem; color: var(--text-muted); cursor: pointer; padding: 0.2rem 0.5rem; background: none; border: none;">✕</button>
+      </div>
+      <form id="categoryForm" onsubmit="return false;">
+        <input type="hidden" id="categoryEditId" value="">
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="inpCatTitle">
+              <span>Kategori Adı *</span>
+              <small>Örn: Kitap İncelemeleri, Projeler, Fotoğraf</small>
+            </label>
+            <input type="text" id="inpCatTitle" class="form-input" placeholder="Örn: Kitap İncelemeleri" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inpCatSlug">
+              <span>Kategori Kodu (Slug) *</span>
+              <small>URL'de kullanılacak benzersiz ad (otomatik oluşur)</small>
+            </label>
+            <input type="text" id="inpCatSlug" class="form-input" placeholder="orn: kitaplar" required>
+          </div>
+
+          <div class="form-group col-span-2">
+            <label class="form-label">
+              <span>Kategori İkonu (Emoji)</span>
+              <small>Aşağıdan seçebilir veya istediğiniz simgeyi yazabilirsiniz</small>
+            </label>
+            <div style="display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+              <input type="text" id="inpCatIcon" class="form-input" value="📚" style="width: 70px; text-align: center; font-size: 1.5rem; padding: 0.4rem;">
+              <div class="emoji-quick-picker" id="emojiQuickPicker">
+                <button type="button" class="emoji-btn" data-emoji="📚">📚</button>
+                <button type="button" class="emoji-btn" data-emoji="💡">💡</button>
+                <button type="button" class="emoji-btn" data-emoji="🎬">🎬</button>
+                <button type="button" class="emoji-btn" data-emoji="📸">📸</button>
+                <button type="button" class="emoji-btn" data-emoji="🎧">🎧</button>
+                <button type="button" class="emoji-btn" data-emoji="📝">📝</button>
+                <button type="button" class="emoji-btn" data-emoji="🎯">🎯</button>
+                <button type="button" class="emoji-btn" data-emoji="🚀">🚀</button>
+                <button type="button" class="emoji-btn" data-emoji="🎨">🎨</button>
+                <button type="button" class="emoji-btn" data-emoji="🔬">🔬</button>
+                <button type="button" class="emoji-btn" data-emoji="💻">💻</button>
+                <button type="button" class="emoji-btn" data-emoji="⚡">⚡</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-span-2">
+            <label class="form-label" for="inpCatSubtitle">
+              <span>Kısa Açıklama / Alt Başlık</span>
+              <small>Menülerde ve kartlarda görünen kısa tanıtım</small>
+            </label>
+            <input type="text" id="inpCatSubtitle" class="form-input" placeholder="Örn: Okuma Listeleri & Felsefi Notlar">
+          </div>
+
+          <div class="form-group col-span-2">
+            <label class="form-label" for="inpCatType">
+              <span>İçerik Şablonu / Formatı</span>
+              <small>Bu kategorideki içeriklerin formu ve görünümü</small>
+            </label>
+            <select id="inpCatType" class="form-input" style="cursor: pointer;">
+              <option value="article">✍️ Makale / Yazı Formatı (Zengin Metin & Özet)</option>
+              <option value="video">🎥 Video Formatı (YouTube URL & Transkript)</option>
+              <option value="podcast">🎙️ Sesli Yayın / Podcast (Ses Dosyası & Bölüm No)</option>
+              <option value="music">🎹 Müzik / Parça (Şarkı & Liner Notları)</option>
+              <option value="standard">📄 Standart İçerik (Kapak, Açıklama, Dış Bağlantı)</option>
+            </select>
+          </div>
+
+          <div class="form-group col-span-2">
+            <label class="form-label">
+              <span>Görünürlük Tercihleri</span>
+            </label>
+            <div style="display: flex; flex-direction: column; gap: 0.6rem; background: var(--bg-input); padding: 0.8rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+              <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.9rem;">
+                <input type="checkbox" id="chkCatShowNav" checked style="accent-color: var(--accent-amber); width: 16px; height: 16px;">
+                <span>Üst Gezinme Menüsünde Göster (Navbar & Mobil Çekmece)</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.9rem;">
+                <input type="checkbox" id="chkCatShowFeed" checked style="accent-color: var(--accent-amber); width: 16px; height: 16px;">
+                <span>Ana Sayfa Akış Filtrelerinde Göster (Kategori Butonları)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.8rem; margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px solid var(--border);">
+          <button type="button" class="btn btn-secondary" id="btnCancelCategory">Vazgeç</button>
+          <button type="button" class="btn btn-primary" id="btnSaveCategory">💾 Kategoriyi Kaydet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MOBİL ÖNİZLEME & CİHAZ SİMÜLATÖRÜ MODALI
+       ====================================================================== -->
+  <div class="mobile-preview-overlay" id="mobilePreviewModal">
+    <div class="mobile-preview-container">
+      <!-- Toolbar -->
+      <div class="preview-toolbar">
+        <div class="preview-toolbar-left">
+          <span class="preview-device-badge">📱 Mobil Önizleme</span>
+          
+          <!-- Cihaz Seçici -->
+          <div class="device-selector">
+            <button type="button" class="device-btn active" data-width="390" data-height="844" title="iPhone 14/15/16 Pro">
+              iPhone (390px)
+            </button>
+            <button type="button" class="device-btn" data-width="375" data-height="667" title="iPhone SE / Kompakt">
+              Kompakt (375px)
+            </button>
+            <button type="button" class="device-btn" data-width="430" data-height="932" title="Pro Max / Plus">
+              Büyük (430px)
+            </button>
+            <button type="button" class="device-btn" data-width="768" data-height="1024" title="iPad / Tablet">
+              Tablet (768px)
+            </button>
+          </div>
+
+          <!-- Yön (Rotate) -->
+          <button type="button" class="btn-preview-tool" id="btnRotatePreview" title="Ekranı Döndür (Dikey / Yatay)">
+            🔄 Döndür
+          </button>
+        </div>
+
+        <div class="preview-toolbar-center">
+          <!-- Sayfa Seçici -->
+          <select id="previewPageSelect" class="preview-page-select" title="Önizlenecek Sayfayı Seç">
+            <option value="index.html">Anasayfa</option>
+            <option value="index.html#youtube">YouTube Bölümü</option>
+            <option value="index.html#podcast">Podcast Bölümü</option>
+            <option value="index.html#blog">Blog Bölümü</option>
+            <option value="index.html#sarkilar-remixler">Şarkılar & Remixler</option>
+            <option value="hakkinda/index.html">Hakkında Sayfası</option>
+          </select>
+
+          <!-- Yenile Butonu -->
+          <button type="button" class="btn-preview-tool" id="btnRefreshPreview" title="Önizlemeyi Yenile">
+            ⚡ Yenile
+          </button>
+        </div>
+
+        <div class="preview-toolbar-right">
+          <a href="index.html" target="_blank" class="btn-preview-tool" id="previewExternalLink" title="Yeni Sekmede Aç">
+            ↗ Yeni Sekme
+          </a>
+          <button type="button" class="btn-preview-close" id="btnClosePreview" title="Önizlemeyi Kapat (ESC)">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Simulator Device Frame -->
+      <div class="preview-viewport-wrap">
+        <div class="smartphone-frame" id="smartphoneFrame" style="width: 390px; height: 844px;">
+          <!-- Frame hardware notch / dynamic island -->
+          <div class="smartphone-notch" id="smartphoneNotch">
+            <div class="smartphone-speaker"></div>
+            <div class="smartphone-camera"></div>
+          </div>
+          <!-- Screen iframe -->
+          <iframe id="previewIframe" src="index.html" class="smartphone-screen" frameborder="0"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Silme Onay Modalı -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-dialog">
+      <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 0.8rem;">İçeriği Silmek İstiyor musunuz?</h3>
+      <p style="color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 1.5rem;" id="deleteConfirmText">
+        Bu işlem geri alınamaz. İçerik ve bağımsız sayfası silinecektir.
+      </p>
+      <div style="display: flex; justify-content: flex-end; gap: 0.8rem;">
+        <button class="btn btn-secondary" id="btnCancelDelete">Vazgeç</button>
+        <button class="btn btn-danger" id="btnConfirmDelete">Evet, Sil</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bildirim Kutusu (Toast) -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="data.js"></script>
+  <script src="panel.js"></script>
+</body>
+</html>
