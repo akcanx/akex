@@ -109,17 +109,7 @@ const siteData = {
       }
     ]
   },
-  "categories": [
-    {
-      "id": "spotify",
-      "title": "Spotify",
-      "icon": "🎶",
-      "subtitle": "Müzik Listeleri",
-      "type": "music",
-      "showInNav": true,
-      "showInFeed": true
-    }
-  ],
+  "categories": [],
   "settings": {
     "brandName": "Akcan Akdağ x",
     "navLabels": {
@@ -581,6 +571,5 @@ const siteData = {
       ],
       "credits": "Prodüksiyon & Düzenleme: AKCAN AKDAĞ · YouTube Müzik Kanalı Özel Yayın"
     }
-  ],
-  "spotify": []
+  ]
 };
