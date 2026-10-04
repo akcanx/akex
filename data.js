@@ -140,32 +140,23 @@ const siteData = {
     ]
   },
   "featured": {
-    "id": "yt-1182",
-    "slug": "akcan-akdag",
-    "url": "video/akcan-akdag/index.html",
+    "id": "yt-1",
+    "slug": "yapay-zeka-gercekten-dusunebilir-mi",
+    "url": "video/yapay-zeka-gercekten-dusunebilir-mi/index.html",
     "type": "youtube",
-    "eyebrow": "Son Video · 4 Ekim 2026",
-    "title": "Akcan Akdağ",
-    "description": "",
-    "cover": "images/covers/video/yt-HrwunGUvmbI.jpg",
-    "youtubeId": "HrwunGUvmbI",
-    "date": "4 Ekim 2026",
-    "tags": []
+    "eyebrow": "Son Video · 1 Ekim 2026",
+    "title": "Yapay Zeka Gerçekten Düşünebilir mi? Turing Testi'nden AGI'a",
+    "description": "Alan Turing'in 1950'de ortaya attığı Taklit Oyunu'ndan OpenAI ve Anthropic'in akıl yürütme modellerine kadar uzanan 76 yıllık bir yolculuk. İstatistiki kelime tahminleri ile gerçek bilinç arasındaki ince çizgi nerede başlar ve nerede biter?",
+    "cover": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=900&auto=format&fit=crop",
+    "youtubeId": "dQw4w9WgXcQ",
+    "date": "1 Ekim 2026",
+    "tags": [
+      "Yapay Zeka",
+      "Felsefe",
+      "Bilinç"
+    ]
   },
   "videos": [
-    {
-      "id": "yt-1182",
-      "slug": "akcan-akdag",
-      "title": "Akcan Akdağ",
-      "date": "4 Ekim 2026",
-      "tags": [],
-      "cover": "images/covers/video/yt-HrwunGUvmbI.jpg",
-      "url": "video/akcan-akdag/index.html",
-      "duration": "",
-      "youtubeUrl": "https://www.youtube.com/embed/HrwunGUvmbI",
-      "description": "",
-      "transcript": []
-    },
     {
       "id": "yt-1",
       "slug": "yapay-zeka-gercekten-dusunebilir-mi",
