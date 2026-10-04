@@ -140,23 +140,32 @@ const siteData = {
     ]
   },
   "featured": {
-    "id": "yt-1",
-    "slug": "yapay-zeka-gercekten-dusunebilir-mi",
-    "url": "video/yapay-zeka-gercekten-dusunebilir-mi/index.html",
+    "id": "yt-1164",
+    "slug": "3-saatte-kurs",
+    "url": "video/3-saatte-kurs/index.html",
     "type": "youtube",
-    "eyebrow": "Son Video · 1 Ekim 2026",
-    "title": "Yapay Zeka Gerçekten Düşünebilir mi? Turing Testi'nden AGI'a",
-    "description": "Alan Turing'in 1950'de ortaya attığı Taklit Oyunu'ndan OpenAI ve Anthropic'in akıl yürütme modellerine kadar uzanan 76 yıllık bir yolculuk. İstatistiki kelime tahminleri ile gerçek bilinç arasındaki ince çizgi nerede başlar ve nerede biter?",
-    "cover": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=900&auto=format&fit=crop",
-    "youtubeId": "dQw4w9WgXcQ",
-    "date": "1 Ekim 2026",
-    "tags": [
-      "Yapay Zeka",
-      "Felsefe",
-      "Bilinç"
-    ]
+    "eyebrow": "Son Video · 4 Ekim 2026",
+    "title": "3 saatte kurs",
+    "description": "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
+    "cover": "images/covers/video/yt-Xu2SIKz8B58.jpg",
+    "youtubeId": "Xu2SIKz8B58",
+    "date": "4 Ekim 2026",
+    "tags": []
   },
   "videos": [
+    {
+      "id": "yt-1164",
+      "slug": "3-saatte-kurs",
+      "title": "3 saatte kurs",
+      "date": "4 Ekim 2026",
+      "tags": [],
+      "cover": "images/covers/video/yt-Xu2SIKz8B58.jpg",
+      "url": "video/3-saatte-kurs/index.html",
+      "duration": "",
+      "youtubeUrl": "https://www.youtube.com/embed/Xu2SIKz8B58",
+      "description": "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
+      "transcript": []
+    },
     {
       "id": "yt-1",
       "slug": "yapay-zeka-gercekten-dusunebilir-mi",
